@@ -39,3 +39,9 @@ docker compose -p njoy-frontend -f docker-compose.yaml up -d
 #copy and open address
 http://localhost:8080
 ```
+**Edit content**
+````bash
+#Hint hit Alt-Ctrl on your keyboard to bring up the login form
+#Login with the credentials in your configuration -> config.json->verwaltung->admin
+#You get redirected to http://localhost:8080/dashboard
+```
