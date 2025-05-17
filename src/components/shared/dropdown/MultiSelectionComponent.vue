@@ -92,7 +92,7 @@
         />
         <button class="absolute right-4 -top-10 w-12 h-full z-20"><img :class="{'-rotate-180 transition-transform' : !showList}" src="/icons/u_arrow.svg" @click="showList = !showList"/></button>
         <div v-if="selection.length > 0" class="absolute top-16 left-0 h-16 w-full bg-gray-600 border rounded-bl-md rounded-br-md flex overflow-x-auto items-center pl-4 gap-2">
-            <div class="border rounded-lg pt-1 pb-1 pl-4 pr-4 flex" v-for="(item, i) of selection" :key="i">
+            <div class="border rounded-lg pt-1 pb-1 pl-4 pr-4 flex text-nowrap" v-for="(item, i) of selection" :key="i">
                 {{ item }}
                 <button class="border hover:border-2 hover:shadow-2xl rounded-full w-8 h-8 items-center justify-center bg-red-500       font-bold text-[1rem] relative -right-3 -top-0" @click="selectItem(item)">X</button>
             </div>

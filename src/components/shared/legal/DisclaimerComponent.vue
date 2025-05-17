@@ -12,6 +12,12 @@
     <Transition name="fade">
     <h1 v-if="suitUp" class="text-6xl text-center">Suit Up!</h1>
     </Transition>
+    <div class="text-3xl fixed w-full bottom-0 flex justify-center gap-2 items-center">
+      <p>More about the application on Github:</p>
+      <a href="https://github.com/njoyporn">
+        <img src="/icons/ide/gitlab.svg" />
+      </a>
+    </div>
 </template>
 
 <style scoped>

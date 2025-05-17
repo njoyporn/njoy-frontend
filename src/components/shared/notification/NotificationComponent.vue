@@ -34,6 +34,6 @@
             'bg-red-500 border-2' : notification.severity == 'ERROR'
         }">
         <img class="w-16 h-16 flex justify-center" :src="notification.severity == 'ERROR' ?  resolveIconSrc('error.svg') : resolveIconSrc('check.svg')">
-        <p class="text-white text-center flex items-center text-3xl font-semibold">{{ notification.message }}</p>
+        <p class="text-white text-center flex items-center text-3xl font-semibold" v-html="notification.message"></p>
     </div>
 </template>

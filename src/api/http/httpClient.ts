@@ -10,13 +10,21 @@ export abstract class HttpClient {
         undefined: "Undefined"
     }
     private static readonly currentRequestMap: Map<string, AbortController> = new Map();
+    public static tokenStorageKey: string = "token";
+    private static token: string | null = ""
 
-    public static get<T = any>(url: string, noLingering?: boolean, contentType?: ALLOWED_CONTENT_TYPE): Promise<T>{
-        return HttpClient.httpCall(url, "get", {noLingeringCalls: noLingering, contentType})
+    private static getToken(): string | null{
+        if (!HttpClient.token) HttpClient.token = localStorage.getItem(HttpClient.tokenStorageKey);
+        return HttpClient.token;
+        
     }
 
-    public static post<T = any>(url: string, data: Object, noLingering?: boolean, contentType?: ALLOWED_CONTENT_TYPE): Promise<T>{
-        return HttpClient.httpCall(url, "post", {body:data, noLingeringCalls:noLingering, contentType})
+    public static get<T = any>(url: string, noLingering?: boolean, contentType?: ALLOWED_CONTENT_TYPE, authorize?: boolean): Promise<T>{
+        return HttpClient.httpCall(url, "get", {noLingeringCalls: noLingering, contentType, needsAuthorization:authorize})
+    }
+
+    public static post<T = any>(url: string, data: Object, noLingering?: boolean, contentType?: ALLOWED_CONTENT_TYPE, authorize?: boolean): Promise<T>{
+        return HttpClient.httpCall(url, "post", {body:data, noLingeringCalls:noLingering, contentType, needsAuthorization: authorize})
     }
 
     public static put<T = any>(url: string, data: Object, noLingering?: boolean, contentType?: ALLOWED_CONTENT_TYPE): Promise<T>{
@@ -33,6 +41,7 @@ export abstract class HttpClient {
         }
         const controller: AbortController = HttpClient.trackCurrentRequest(url, method);
         let headers: HeadersInit;
+        
         if (config.contentType){
             headers = { 
                 "Content-Type": config.contentType,
@@ -44,9 +53,8 @@ export abstract class HttpClient {
                 "Accept": "*/*"
             };
         }
-        if (config.needsAuthorization){
-            headers.Authorization = `Bearer <GET_YOUR_TOKEN>`;
-        }
+        headers.Authorization = `Bearer ${HttpClient.getToken()}`;
+
         let requestConfig: AxiosRequestConfig = {
             url,
             method,

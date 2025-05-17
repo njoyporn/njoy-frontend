@@ -2,6 +2,8 @@ const listStates = [
     "FAVOURITES",
     "RANDOM",
     "CATEGORY",
+    "RECENT",
+    "POPULAR",
     "SUB_CATEGORY",
     "HAPPY_END",
     "POPULAR",

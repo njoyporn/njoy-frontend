@@ -116,7 +116,12 @@
     .h-22by24 {
         height: calc((100% / 24) * 22);
     }
-
+    .h-19by24 {
+        height: calc((100% / 24) * 19);
+    }
+    .h-20by24 {
+        height: calc((100% / 24) * 20);
+    }
     .h-21by24 {
         height: calc((100% / 24) * 21);
     }

@@ -68,12 +68,45 @@ const router = createRouter({
           component: WatchComponent
         }
       ]
+    },
+    {
+      path: '/category',
+      name: 'Category',
+      component: () => import('@/views/Category.view.vue'),
+      children: [
+        {
+          path: '',
+          name: 'CategoriesComponent',
+          component: () => import("@/components/category/CategoriesComponent.vue")
+        }
+      ]
+    },
+    {
+      path: '/search',
+      name : 'Search',
+      component: () => import('@/views/Search.view.vue'),
+      children: [
+        {
+          path: '',
+          name: 'SearchComponent',
+          component: () => import('@/components/search/SearchComponent.vue')
+        },
+        {
+          path: ':search',
+          name: 'ParamSearchComponent',
+          component: () => import('@/components/search/SearchComponent.vue')
+        }
+      ]
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: "/",
     }
   ]
 })
 
 router.beforeEach(async (to, from) => {
-  if (to.path == '/dashboard' && !await AccountsAPI.verify()) {
+  if (to.path == '/dashboard' && !await AccountsAPI.verifyRole('administrator')) {
     router.push({path: "/"})
   }
 })

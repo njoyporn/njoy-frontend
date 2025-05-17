@@ -144,7 +144,7 @@
                 <SingleVideoRowComponent v-model:isLoading="loadingList[3]" :reload="reloadRomanceOfTheDay" @addFavourite="reloadFavourites = !reloadFavourites"/>
                 <ListComponent :title="`Random ${randomSubCategory} Bitches`" :reload="reloadRandomBitches" :state="'SUB_CATEGORY'" :sub_category="randomSubCategory" :titleClasses="'bg-pg-dark-100'" v-model:isLoading="loadingList[4]" :listClasses="'bg-pg-dark-100'" @addFavourite="reloadFavourites = !reloadFavourites"/>
                 <ListComponent :title="`Happy End: ${randomHappyEnd}`" :reload="reloadHappyEnds" :state="'HAPPY_END'" :happy_end="randomHappyEnd" :titleClasses="'bg-pg-dark-100'" v-model:isLoading="loadingList[5]" :listClasses="'bg-pg-dark-100'" @addFavourite="reloadFavourites = !reloadFavourites"/>
-                <ListComponent :title="'Most Recent'" :state="'NEW'" :titleClasses="'bg-pg-dark-to-black-100'" v-model:isLoading="loadingList[6]" :listClasses="'pg-bg-black-100'" @addFavourite="reloadFavourites = !reloadFavourites" />
+                <ListComponent :title="'Most Recent'" :state="'RECENT'" :titleClasses="'bg-pg-dark-to-black-100'" v-model:isLoading="loadingList[6]" :listClasses="'pg-bg-black-100'" @addFavourite="reloadFavourites = !reloadFavourites" />
             </div>
             <PageComponent v-else :videos="searchResult" :title-text="lastSearchTerm" :links="links" @loadPrev="loadPrev()" @loadNext="loadNext()"></PageComponent>
         </div>

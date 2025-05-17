@@ -5,17 +5,21 @@ import type { BusinessResponse, Paginated } from "@/types/core.types";
 
 export abstract class VideoAPI {
 
+    private static readonly HOST_URL: string = "https://api.njoyporn.com";
+    private static readonly API_PATH: string = "/api/v1";
     private static readonly VIDOES_PATH: string = "/videos";
     private static readonly VIDEO_PATH: string = "/video";
-    private static readonly SEARCH_PATH: string = "/search"
+    private static readonly VIDEO_SERVICE_PATH: string = "/video-service";
+    private static readonly SEARCH_PATH: string = "/search";
     private static readonly LIKE_VIDEO_PATH: string = "/like";
     private static readonly WATCHED_VIDEO_PATH: string = "/watched";
-    private static readonly BASE_URL: string = window.location.host.includes("localhost") ? "http://localhost:6692/api/v1" : "https://api.njoyporn.com/api/v1";
-    // private static readonly BASE_URL: string = "https://api.njoyporn.com/api/v1";
+    // private static readonly BASE_URL: string = window.location.host.includes("localhost") ? `http://localhost:6692${this.API_PATH}` : `${this.HOST_URL}${this.API_PATH}`;
+    private static readonly BASE_URL: string = `${this.HOST_URL}${this.API_PATH}`;
 
     static async upload(video: CreateVideoRequestDTO){
-
-        const res: BusinessResponse<any> = await HttpClient.post<BusinessResponse<any>>(`${this.BASE_URL}${this.VIDEO_PATH}`, {
+        //`${this.HOST_URL}${this.VIDEO_SERVICE_PATH}${this.API_PATH}${this.VIDEO_PATH}`
+        //`${this.BASE_URL}${this.VIDEO_PATH}`
+        const res: BusinessResponse<any> = await HttpClient.post(`${this.HOST_URL}${this.VIDEO_SERVICE_PATH}${this.API_PATH}${this.VIDEO_PATH}`, {
             title: video.title,
             description: video.description,
             categories:video.categories.join(","),
@@ -25,7 +29,8 @@ export abstract class VideoAPI {
             happy_ends:video.happy_ends.join(","),
             timestamps:video.timestamps,
             videoFile:video.file,
-        }, false, "multipart/form-data")
+        }, false, "multipart/form-data", true)
+        console.log(res);
         return res;
     }
 
@@ -73,6 +78,12 @@ export abstract class VideoAPI {
 
     static async getRandomVideos(): Promise<Video[] | null> {
         const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDOES_PATH}?random=whatever`)
+        if(!res) return null
+        return res.items;
+    }
+
+    static async getRecentVideos(): Promise<Video[] | null> {
+        const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDOES_PATH}?recent=whatever`)
         if(!res) return null
         return res.items;
     }

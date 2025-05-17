@@ -72,6 +72,13 @@
         if (!res) return;
         videoList.value = res;
     }
+
+    async function loadMostRecent(): Promise<void> {
+        const res: Video[] | null = await VideoAPI.getRecentVideos();
+        if (!res) return;
+        videoList.value = res;
+    }
+    
     async function loadCategories(): Promise<void> {
         if(!props.category) return;
         const res: Paginated<Video> | null = await VideoAPI.searchVideos([{"categories":props.category}], [], "&page=-1");
@@ -97,6 +104,7 @@
             case "CATEGORY": await loadCategories(); return;
             case "SUB_CATEGORY": await loadSubCategories(); return;
             case "HAPPY_END": await loadHappyEnds(); return;
+            case "RECENT": await loadMostRecent(); return;
             case "RANDOM":
             default: await loadRandomVideos(); return;
         }

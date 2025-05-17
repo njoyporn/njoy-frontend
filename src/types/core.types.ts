@@ -1,8 +1,9 @@
 export interface BusinessResponse<T> {
     id: string;
     error: BusinessError | null;
-    items: T[];
+    items: T[] 
     message: string;
+    token?: string;
 }
 
 export interface BusinessError {

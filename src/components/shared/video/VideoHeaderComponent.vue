@@ -17,8 +17,8 @@
     onMounted(async() => {
         const randomVideos: Video[] | null = await VideoAPI.getRandomVideos();
         if(!randomVideos) return;
-        randomVideo.value = randomVideos[0];
         isLoading.value = false;
+        randomVideo.value = randomVideos[0];
         emit("update:isLoading", isLoading.value);
         await new Promise(resolve => setTimeout(resolve, 4500));
         const videoElement: HTMLVideoElement | null = document.getElementById("header-video") as HTMLVideoElement;

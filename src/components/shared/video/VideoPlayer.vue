@@ -5,7 +5,7 @@
     import { TimestampService } from "@/services/timestamp.service";
     import { NotificationService } from "../notification/notification.service";
     import ActionStampEditor from "./ActionStampEditor.vue";
-import { ActionStampService } from "@/services/actionStamp.service";
+    import { ActionStampService } from "@/services/actionStamp.service";
 
     const props = defineProps<{
         video:Video;
@@ -43,7 +43,8 @@ import { ActionStampService } from "@/services/actionStamp.service";
     const resolutionFactor = ref<number>(1);
 
     const cumBarProgressElement = useTemplateRef<HTMLElement>("progress-cumbar")
-    let timeout: any = null;
+    let enableTimeout: any = null;
+    let disableTimeout: any = null;
 
     onMounted(()=> {
         const player: HTMLVideoElement | null = document.getElementById("video-player") as HTMLVideoElement;
@@ -119,7 +120,7 @@ import { ActionStampService } from "@/services/actionStamp.service";
 
     function playVideo(): void {
         if(!videoElement || !document.location.href.includes('/watch')) return;
-        enableDetails(1250,1);
+        showDetails.value = false;
         if(videoElement.currentTime == 0) emit("watched");
         isPaused.value = false;
         videoElement.play();
@@ -136,15 +137,15 @@ import { ActionStampService } from "@/services/actionStamp.service";
 
     function enableDetails(enabledForMS: number, disableDelay: number): void {
         showDetails.value = true;
-        if(timeout) clearTimeout(timeout);
-        timeout = setTimeout(() => {
+        if(enableTimeout) clearTimeout(enableTimeout);
+        enableTimeout = setTimeout(() => {
             disableDetails(disableDelay);
         }, enabledForMS);
     }
 
     function disableDetails(delay: number): void {
-        if (timeout) clearTimeout(timeout);
-        timeout = setTimeout(() => {
+        if (disableTimeout) clearTimeout(disableTimeout);
+        disableTimeout = setTimeout(() => {
             showDetails.value = false;
         }, delay);
     }
@@ -289,9 +290,12 @@ import { ActionStampService } from "@/services/actionStamp.service";
     }
 
     function loadTimestamps(): void {
-        const ts: Timestamp[] | null = timestampService.find(props.video.id)
-        if (!ts) return;
-        ts.map((t) => props.video.timestamps.push(t))
+        const ts: Timestamp[] | null = timestampService.find(props.video.id);
+        if (!ts || ts.length == 0) return;
+        ts.map((t) =>{
+            const found: Timestamp | undefined = props.video.timestamps.find((x) => x == t)
+            if (!found) props.video.timestamps.push(t)
+        });
         props.video.timestamps.sort((a,b) => a.ts - b.ts);
     }
 
