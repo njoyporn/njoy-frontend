@@ -30,7 +30,7 @@
     }
 
     function redirectToRegister(): void {
-        document.dispatchEvent(new KeyboardEvent('keydown', {'code': 'AltRight'}));
+        document.dispatchEvent(new KeyboardEvent('keydown', {'code': 'ControlRight'}));
         document.location.href = "/register"
     }
 

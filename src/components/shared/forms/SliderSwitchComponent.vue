@@ -14,7 +14,11 @@
     const input = ref<boolean>(false)
 
     onMounted(() => {
-        input.value = props.input
+      input.value = props.input
+    })
+
+    watch(()=>props.input, ()=>{
+      input.value = props.input
     })
 
     watch(() => input.value, ()=>{

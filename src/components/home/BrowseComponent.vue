@@ -14,6 +14,7 @@
     import ArtisticLoadingScreen from '../shared/loading/ArtisticLoadingScreen.vue';
     import { RTAService } from '@/services/rta.service';
     import StarfieldComponent from '../shared/starfield/StarfieldComponent.vue';
+    import { AccountsAPI } from "@/api/accounts/accounts.api";
 
 
     let lastFilterRecord: Record<string, string>[] = []; 
@@ -28,6 +29,7 @@
     const randomSubCategory = ref<string>(pickRandom<string>(hot_sub_categories));
     const randomHappyEnd = ref<string>(pickRandom<string>(hot_happy_ends));
     const loadingList = ref<boolean[]>([true, true, true, true, true, true, true, true]); //the last one needs to be reserved for rta
+    const isVerified = ref<boolean>(false)
 
     const reloadFavourites = ref<boolean>(false);
     const reloadRandomCategories = ref<boolean>(false);
@@ -37,7 +39,7 @@
     const reachedBottom = ref<boolean>(false);
     const reachedTop = ref<boolean>(true)
 
-    onMounted(()=>{
+    onMounted(async ()=>{
         document.addEventListener("scroll", ()=>{
             if(window.scrollY + window.innerHeight == document.body.scrollHeight){
                 if(reachedTop.value){
@@ -60,6 +62,7 @@
             }
         });
         loadingList.value[loadingList.value.length - 1] = !RTAService.load()
+        isVerified.value = await AccountsAPI.verifyRole("administrator")
     })
 
     watch(()=>loadingList.value, ()=>{
@@ -69,7 +72,6 @@
     }, {deep:true})
 
     async function searchVideos(): Promise<void> {
-        // isLoading.value = true;
         const searchList = searchTerm.value.split(" ");
         const categories: string[] = [];
         const sub_categories: string[] = [];
@@ -95,9 +97,13 @@
         if(!res) return;
         
         if(res.links.next != "" || res.links.prev != "") links.value = res.links
-        lastSearchTerm.value = searchTerm.value;
-        searchResult.value = res.business_response.items;
-        // isLoading.value = false;
+        if (res.business_response.message == "!Search: Random-Videos"){
+            lastSearchTerm.value = `No videos found for ${searchTerm.value}`;
+            searchResult.value = res.business_response.items;
+        } else {
+            lastSearchTerm.value = searchTerm.value;
+            searchResult.value = res.business_response.items;
+        }
     }
 
     async function loadPrev(): Promise<void> {
@@ -145,6 +151,7 @@
                 <ListComponent :title="`Random ${randomSubCategory} Bitches`" :reload="reloadRandomBitches" :state="'SUB_CATEGORY'" :sub_category="randomSubCategory" :titleClasses="'bg-pg-dark-100'" v-model:isLoading="loadingList[4]" :listClasses="'bg-pg-dark-100'" @addFavourite="reloadFavourites = !reloadFavourites"/>
                 <ListComponent :title="`Happy End: ${randomHappyEnd}`" :reload="reloadHappyEnds" :state="'HAPPY_END'" :happy_end="randomHappyEnd" :titleClasses="'bg-pg-dark-100'" v-model:isLoading="loadingList[5]" :listClasses="'bg-pg-dark-100'" @addFavourite="reloadFavourites = !reloadFavourites"/>
                 <ListComponent :title="'Most Recent'" :state="'RECENT'" :titleClasses="'bg-pg-dark-to-black-100'" v-model:isLoading="loadingList[6]" :listClasses="'pg-bg-black-100'" @addFavourite="reloadFavourites = !reloadFavourites" />
+                <ListComponent v-if="isVerified" :title="'Private'" :state="'PRIVATE'" :titleClasses="'bg-pg-dark-100'" :listClasses="'pg-bg-black-100'" @addFavourite="reloadFavourites = !reloadFavourites" />
             </div>
             <PageComponent v-else :videos="searchResult" :title-text="lastSearchTerm" :links="links" @loadPrev="loadPrev()" @loadNext="loadNext()"></PageComponent>
         </div>

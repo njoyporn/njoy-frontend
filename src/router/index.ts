@@ -12,6 +12,7 @@ const router = createRouter({
       path: '/',
       name: 'Home',
       component: HomeView,
+      meta: { title: 'nJoyPorn | Home'},
       children: [
         {
           path: '',
@@ -23,12 +24,14 @@ const router = createRouter({
     {
       path: '/about',
       name: 'About',
-      component: () => import('../views/About.view.vue')
+      component: () => import('../views/About.view.vue'),
+      meta: { title: 'nJoyPorn | About'},
     },
     {
       path: '/register',
       name: 'Register',
-      component: () => import('../views/Register.view.vue')
+      component: () => import('../views/Register.view.vue'),
+      meta: { title: 'nJoyPorn | Register'},
     },
     {
       path: '/logout',
@@ -38,17 +41,20 @@ const router = createRouter({
     {
       path: '/disclaimer',
       name: 'Disclaimer',
-      component: () => import('@/components/shared/legal/DisclaimerComponent.vue')
+      component: () => import('@/components/shared/legal/DisclaimerComponent.vue'),
+      meta: { title: 'nJoyPorn | Disclaimer'},
     },
     {
       path: '/impressum',
       name: 'Impressum',
-      component: () => import('@/components/shared/legal/ImpressumComponent.vue')
+      component: () => import('@/components/shared/legal/ImpressumComponent.vue'),
+      meta: { title: 'nJoyPorn | Impressum'},
     },
     {
       path: '/dashboard',
       name: 'Dashboard',
       component: () => import('@/views/DashboardView.vue'),
+      meta: { title: 'nJoyPorn | Dashboard'},
       children: [
         {
           path: '',
@@ -61,6 +67,7 @@ const router = createRouter({
       path: '/watch',
       name: 'Watch',
       component: WatchView,
+      meta: { title: 'nJoyPorn | Watch'},
       children: [
         {
           path: ':id',
@@ -73,6 +80,7 @@ const router = createRouter({
       path: '/category',
       name: 'Category',
       component: () => import('@/views/Category.view.vue'),
+      meta: { title: 'nJoyPorn | Category'},
       children: [
         {
           path: '',
@@ -85,6 +93,7 @@ const router = createRouter({
       path: '/search',
       name : 'Search',
       component: () => import('@/views/Search.view.vue'),
+      meta: { title: "nJoyPorn | Search"},
       children: [
         {
           path: '',
@@ -97,6 +106,11 @@ const router = createRouter({
           component: () => import('@/components/search/SearchComponent.vue')
         }
       ]
+    },
+    {
+      path: '/verify-account/:id/:code',
+      name: 'VerifyAccount',
+      component: () => import('@/views/VerifyAccount.view.vue')
     },
     {
       path: '/:pathMatch(.*)*',

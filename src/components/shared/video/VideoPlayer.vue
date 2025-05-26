@@ -232,15 +232,14 @@
 
     function updateCumbar(): void {
 
-        props.video.timestamps.sort((a,b) => a.ts - b.ts);
+        // props.video.timestamps.sort((a,b) => a.ts - b.ts);
         const timestamp: Timestamp | undefined = props.video.timestamps.find((ts) => ts.ts > videoElement.currentTime);
-
         if(!timestamp) {
             clearCumBar();
             return;
         } else if (!cumBarProgressElement.value) return;
 
-        nextTimestamp.value = timestamp;
+        nextTimestamp.value = {...timestamp};
         udpateTimestampCounter();
         const percentage = videoElement.currentTime / timestamp.ts;
         cumBarProgressElement.value.style.width = `${99 - (percentage * 99)}%`;
@@ -268,10 +267,11 @@
         return timestamp.ts;
     }
 
-    function jumpToTimestamp(direction: string): void {
+    function jumpToTimestamp(direction: string, countdown?: number): void {
         if(direction == "next") {
             if (nextTimestamp.value.ts != 0 && nextTimestamp.value.ts > videoElement.currentTime) {
-                videoElement.currentTime = nextTimestamp.value.ts;
+                if (countdown) videoElement.currentTime = nextTimestamp.value.ts - countdown;
+                else videoElement.currentTime = nextTimestamp.value.ts;
             }
         }
         else videoElement.currentTime = findPreviousTimestamp();
@@ -284,15 +284,17 @@
     function saveTimestamp(): void {
         if(videoElement.currentTime > 0){
             timestampService.saveTimeStamp({videoId:props.video.id, ts: videoElement.currentTime});
+            props.video.timestamps.push({ts:videoElement.currentTime})
             notificationService.sendNotification({severity: "SUCCESS", message:"Timestamp saved"});
+            props.video.timestamps.sort((a,b) => a.ts - b.ts);
         }
-        loadTimestamps();
+        // loadTimestamps();
     }
 
     function loadTimestamps(): void {
         const ts: Timestamp[] | null = timestampService.find(props.video.id);
         if (!ts || ts.length == 0) return;
-        ts.map((t) =>{
+        ts.map((t) => {
             const found: Timestamp | undefined = props.video.timestamps.find((x) => x == t)
             if (!found) props.video.timestamps.push(t)
         });
@@ -301,7 +303,7 @@
 
     function loadActionStamps(): void {
         const aS: ActionStamp[] | null = actionStampService.find(props.video.id);
-        if (!aS) return;
+        if (!aS || aS.length == 0) return;
         aS.map((a) => props.video.action_stamps.push(a));
         props.video.action_stamps.sort((a, b) => a.ts - b.ts);
     }
@@ -325,11 +327,11 @@
 </script>
 
 <template>
-    <div class="w-full h-full flex justify-center items-center relative" :class="{'w-screen h-screen': isFullScreen}">
-        <div @mouseleave="disableDetails(1750)" id="overlay" class="absolute z-40 p-8 grid grid-rows-[1fr_2fr_1fr_1fr_1fr_4fr_1fr_1fr] bg-gray-500 bg-opacity-25 w-[100%] h-[97%]" :class="{'min-w-full min-h-full': isFullScreen, 'hidden':!showDetails}">
-                    <div class="absolute z-50 flex justify-start flex-row-reverse" :class="{'w-[101%] pr-[10px] bottom-[18.25rem]' :isFullScreen, 'pr-[5.5px] w-[99.8%] bottom-[10.875rem]': !isFullScreen}">
-            <div ref="action-bar" class="w-[99%] h-2 relative z-50">
-                <div v-for="(actionStamp, i) of props.video.action_stamps" :key="i" class="absolute group" :class="`left-[${calcActionsStampXPosition(actionStamp)}]`" :style="`left:${calcActionsStampXPosition(actionStamp)};`" @click="jumpToActionStamp(actionStamp)">
+    <div class="w-full h-full flex justify-center items-center relative" :class="{'w-screen h-screen': isFullScreen}" @mousemove="enableDetails(2150,2)" @mouseleave="disableDetails(1750)">
+        <div id="overlay" class="absolute z-40 p-8 grid grid-rows-[1fr_2fr_1fr_1fr_1fr_4fr_1fr_1fr] bg-gray-500 bg-opacity-25 w-[100%] h-[97%]" :class="{'min-w-full min-h-full': isFullScreen, 'hidden':!showDetails}">
+            <div class="absolute z-50 flex justify-start flex-row-reverse" :class="{'w-[101%] pr-[10px] bottom-[18.25rem]' :isFullScreen, 'pr-[5.5px] w-[99.8%] bottom-[10.875rem]': !isFullScreen}">
+                <div ref="action-bar" class="w-[99%] h-2 relative z-50">
+                    <div v-for="(actionStamp, i) of props.video.action_stamps" :key="i" class="absolute group" :class="`left-[${calcActionsStampXPosition(actionStamp)}]`" :style="`left:${calcActionsStampXPosition(actionStamp)};`" @click="jumpToActionStamp(actionStamp)">
                     <div class="h-2 w-2 bg-red-600"></div>
                     <span v-if="actionStamp.category" class="opacity-0 group-hover:opacity-100 absolute bottom-4" v-text="actionStamp.category.join(',')"></span>
                 </div>
@@ -356,7 +358,10 @@
                 <button><img class="w-full h-full" v-if="isPaused" src="/icons/play-animated.svg" @click="playVideo()"/><img class="w-full h-full" v-else src="/icons/pause-animated.svg" @click="pauseVideo()" /></button>
                 <button><img class="" src="/icons/rewind-5sec.svg" @click="skip(-5)"/></button>
                 <button><img class="" src="/icons/forward-5sec.svg" @click="skip(5)" /></button>
-                <button><img class="" src="/icons/forward-arrow.svg" @click="jumpToTimestamp('next')" /></button>
+                <button class="relative group">
+                    <img class="absolute bottom-20 opacity-0 group-hover:opacity-100 hover:opacity-100" src="/icons/five-seconds-to-go.svg" @click="jumpToTimestamp('next', 5)"/>
+                    <img class="" src="/icons/forward-arrow.svg" @click="jumpToTimestamp('next')" />
+                </button>
                 <button><img v-if="!isMuted" src="/icons/volume.svg" @click="muteVideo()"><img v-else src="/icons/muted.svg" @click="unMuteVideo()"></button>
                 <div class="relative flex items-center">
                     <div class="w-full h-4 z-30" @click="setVolume($event)"></div>
@@ -385,7 +390,7 @@
             <div class="text-xl flex justify-center">{{ currentTimestampCounter }} / {{ video.timestamps.length }}</div>
         </div>
         <ActionStampEditor v-if="showActionEditor" :video="video" @action-stamp-created="addActionStamp($event)"></ActionStampEditor>
-        <video id="video-player" class="absolute z-20 w-[100%] h-[100%] rounded-lg" ref="video-player" :src="deriveWatchURL()" :poster="deriveThumbnailURL()" muted @mouseenter="enableDetails(2750,1)" @click="playPause()" @mousemove="enableDetails(2150,1)"></video>
+        <video id="video-player" class="absolute z-20 w-[100%] h-[100%] rounded-lg" ref="video-player" :src="deriveWatchURL()" :poster="deriveThumbnailURL()" muted @mouseenter="enableDetails(2750,1)" @click="playPause()"></video>
     </div>    
 </template>
 

@@ -61,6 +61,7 @@
         const favourites: Video[] = FavouriteManager.getFavaourites();
         if (favourites.length > 0) {
             videoList.value = favourites;
+            videoList.value.reverse();
         } else {
             title.value = "Click on the Heart to Select Favourites <img class='w-auto h-16 pl-4 flex justify-center items-center animate-bounce' src='/icons/heart-pink.svg' />"
             loadRandomVideos();
@@ -97,6 +98,11 @@
         if (!res) return;
         videoList.value = res.business_response.items;
     }
+    async function loadPrivateVideos(): Promise<void> {
+        const res: Video[] | null = await VideoAPI.getPrivateVideos();
+        if (!res) return;
+        videoList.value = res;
+    }
 
     async function laodVideos(): Promise<void> {
         switch(props.state){
@@ -105,6 +111,7 @@
             case "SUB_CATEGORY": await loadSubCategories(); return;
             case "HAPPY_END": await loadHappyEnds(); return;
             case "RECENT": await loadMostRecent(); return;
+            case "PRIVATE": await loadPrivateVideos(); return;
             case "RANDOM":
             default: await loadRandomVideos(); return;
         }

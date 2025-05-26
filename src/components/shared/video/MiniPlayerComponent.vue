@@ -84,8 +84,9 @@
                 <div class="w-full h-full flex"><img class="w-8 h-8" src="/icons/thumbs-up-yellow.svg" />{{ video.likes }}</div>
                 <div class="w-full h-full flex"><img class="w-8 h-8" src="/icons/thumbs-down-yellow.svg" />{{ video.dislikes }}</div>
                 <div class="w-full h-full flex"><img class="w-8 h-8" src="/icons/eye-colored.svg" />{{ video.views }}</div>
-                <div class="w-full h-full"></div>
-                <div class="w-full h-full flex justify-end pr-2"><img class="w-8 h-8" src="/icons/eye-colored.svg" />{{ durationToTimeString(video.duration) }}</div>
+                <div class="w-full h-full flex" v-if="video.timestamps.length > 0"><img class="w-8 h-8" src="/icons/eggplant.svg"><img class="w-8 h-8 rotate-[-36deg] pt-2 pb-2 pr-2 pl-0" src="/icons/splash-white.svg"><span>{{ video.timestamps.length }}</span></div>
+                <div class="w-full h-full flex" v-else></div>
+                <div class="w-full h-full flex justify-end pr-2"><img class="w-8 h-8" src="/icons/duration.svg" />{{ durationToTimeString(video.duration) }}</div>
             </div>
         </div>
         </Transition>

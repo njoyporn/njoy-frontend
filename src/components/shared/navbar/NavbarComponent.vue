@@ -41,7 +41,7 @@
 
 
     function showLogin(): void {
-        document.dispatchEvent(new KeyboardEvent('keydown', {'code': 'AltRight'}));
+        document.dispatchEvent(new KeyboardEvent('keydown', {'code': 'ControlRight'}));
     }
 
     function scrollTop(): void {

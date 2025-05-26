@@ -26,6 +26,7 @@ export interface Video {
     action_stamps: ActionStamp[]
     created_at?: Date;
     updated_at?: Date;
+    sponsored_url?: string;
 }
 
 export interface CreateVideoRequestDTO {

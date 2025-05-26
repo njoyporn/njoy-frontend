@@ -7,7 +7,7 @@ export abstract class VideoAPI {
 
     private static readonly HOST_URL: string = "https://api.njoyporn.com";
     private static readonly API_PATH: string = "/api/v1";
-    private static readonly VIDOES_PATH: string = "/videos";
+    private static readonly VIDEOS_PATH: string = "/videos";
     private static readonly VIDEO_PATH: string = "/video";
     private static readonly VIDEO_SERVICE_PATH: string = "/video-service";
     private static readonly SEARCH_PATH: string = "/search";
@@ -29,6 +29,9 @@ export abstract class VideoAPI {
             happy_ends:video.happy_ends.join(","),
             timestamps:video.timestamps,
             videoFile:video.file,
+            public:video.public,
+            free:video.free,
+            trailer:video.trailer
         }, false, "multipart/form-data", true)
         console.log(res);
         return res;
@@ -77,14 +80,20 @@ export abstract class VideoAPI {
     }
 
     static async getRandomVideos(): Promise<Video[] | null> {
-        const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDOES_PATH}?random=whatever`)
+        const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDEOS_PATH}?random=whatever`)
         if(!res) return null
         return res.items;
     }
 
     static async getRecentVideos(): Promise<Video[] | null> {
-        const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDOES_PATH}?recent=whatever`)
+        const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDEOS_PATH}?recent=whatever`)
         if(!res) return null
+        return res.items;
+    }
+
+    static async getPrivateVideos(): Promise<Video[] | null> {
+        const res: BusinessResponse<Video> | null = await HttpClient.get(`${this.BASE_URL}${this.VIDEOS_PATH}?private=whatever`);
+        if (!res) return res;
         return res.items;
     }
 

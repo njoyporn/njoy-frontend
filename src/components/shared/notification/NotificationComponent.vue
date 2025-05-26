@@ -28,12 +28,13 @@
 
 <template>
     <div v-if="isActive" class="lg:left-[40%] lg:w-[20%]
-                                left-[5%] w-[90%] fixed top-32 h-24 rounded-[1rem] grid grid-cols-[4rem_auto] gap-4 bg-opacity-90 z-50 justify-start items-center border-white p-2" 
+                                left-[5%] w-[90%] fixed top-32 min-h-24 rounded-[1rem] grid grid-cols-[4rem_auto] gap-4 bg-opacity-90 z-50 justify-start items-center border-white p-2" 
         :class="{
             'bg-green-500 border-2' : notification.severity == 'SUCCESS', 
-            'bg-red-500 border-2' : notification.severity == 'ERROR'
+            'bg-red-500 border-2' : notification.severity == 'ERROR',
+            'bg-orange-500 border-2' : notification.severity == 'WARNING'
         }">
-        <img class="w-16 h-16 flex justify-center" :src="notification.severity == 'ERROR' ?  resolveIconSrc('error.svg') : resolveIconSrc('check.svg')">
-        <p class="text-white text-center flex items-center text-3xl font-semibold" v-html="notification.message"></p>
+        <img class="w-16 h-16 flex justify-center" :src="notification.severity == 'ERROR' ?  resolveIconSrc('error.svg') : notification.severity === 'SUCCESS' ? resolveIconSrc('check.svg') : resolveIconSrc('warn.svg')">
+        <p class="text-white text-justify flex items-center text-3xl font-semibold" v-html="notification.message"></p>
     </div>
 </template>

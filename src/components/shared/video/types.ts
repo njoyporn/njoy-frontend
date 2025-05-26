@@ -7,7 +7,8 @@ const listStates = [
     "SUB_CATEGORY",
     "HAPPY_END",
     "POPULAR",
-    "NEW"
+    "NEW",
+    "PRIVATE"
 ]
 
 export type LIST_STATE = typeof listStates[number];

@@ -17,6 +17,7 @@
     async function upload(){
         isUploading.value = true;
         if(videoDTO.value.file){
+            console.log(videoDTO.value)
             const res: BusinessResponse<any> = await VideoAPI.upload(videoDTO.value);
             if(res.message == "VIDEO_CREATED") {
                 isUploading.value = false;

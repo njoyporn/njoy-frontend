@@ -17,7 +17,9 @@
   })
 
   function onKeyPress(e: KeyboardEvent): void {
-    if (e.code == "AltRight"){
+    console.log(e.code)
+    if (e.code == "ControlRight"){
+
       showLogin.value = !showLogin.value;
     }
   }

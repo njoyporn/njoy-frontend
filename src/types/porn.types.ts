@@ -11,7 +11,7 @@ export const categoryList = [
     "Deepthroat",
     "Bukkake",
     "Breeding",
-    "Glory-Hole",
+    "Gloryhole",
     "DP",
     "69",
     "DAP",
@@ -59,7 +59,7 @@ export const hot_categories = [
     "Creampie",
     "Anal",
     "Deepthroat",
-    "Glory-Hole",
+    "Gloryhole",
     "Gangbang",
     "Missionary",
     "POV",
@@ -141,7 +141,17 @@ export const visibilityOptionList = [
     "FRIENDS",
 ]
 
+export const blackList = [
+    "child",
+    "kid",
+    "kids",
+    "childs",
+    "sixteen",
+    "seventeen"
+]
+
 export type Category = typeof categoryList[number];
 export type SubCategory = typeof sub_categoryList[number];
 export type HappyEnd = typeof happyEndList[number];
 export type Visibility = typeof visibilityOptionList[number];
+export type Forbidden = typeof blackList[number];

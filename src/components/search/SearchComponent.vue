@@ -54,9 +54,13 @@
         if(!res) return;
         
         if(res.links.next != "" || res.links.prev != "") links.value = res.links
-        lastSearchTerm.value = searchTerm.value;
-        searchResult.value = res.business_response.items;
-
+        if (res.business_response.message == "!Search: Random-Videos"){
+            lastSearchTerm.value = `No videos found for ${searchTerm.value}`;
+            searchResult.value = res.business_response.items;
+        } else {
+            lastSearchTerm.value = searchTerm.value;
+            searchResult.value = res.business_response.items;
+        }
     }
     async function loadPrev(): Promise<void> {
         const res: Paginated<Video> | null = await VideoAPI.searchVideos(lastFilterRecord, [], links.value.prev);

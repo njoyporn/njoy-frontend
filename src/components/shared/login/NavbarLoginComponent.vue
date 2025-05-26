@@ -31,7 +31,7 @@
     <div v-if="!hideLogin" class="w-full h-60 border rounded-md bg-gray-800 flex flex-wrap justify-around items-center" @keyup.enter="login">
         <input class="w-5/6 h-10 rounded-l-md px-2 text-white bg-gray-600" v-model="email_address" :placeholder="placeholder ? placeholder : 'E-Mail'">
         <input class="w-5/6 h-10 rounded-l-md px-2 text-white bg-gray-600" v-model="password" :placeholder="placeholder_password ? placeholder_password : 'Password'">
-        <PrimaryButton :text="'Login'" @click="login"></PrimaryButton>
+        <PrimaryButton :text="'Login'" @click="login()"></PrimaryButton>
     </div>
     </div>
 </template>

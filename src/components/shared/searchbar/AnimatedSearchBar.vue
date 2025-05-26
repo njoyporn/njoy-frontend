@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { onMounted, watch, ref } from 'vue';
     import { resolveIconSrc } from "@/components/shared/utils/images.utils";
+    import { blackList } from '@/types/porn.types';
+    import { NotificationService } from '../notification/notification.service';
     
     const props = defineProps<{
         input: string;
@@ -11,6 +13,8 @@
         enabled?: boolean;
         animationText?: {text: string, delay: number; cps: number, out: number}
     }>();
+
+    const notificationService: NotificationService = NotificationService._getInstance();
 
     onMounted(async ()=>{
         if(props.animationText) {
@@ -34,8 +38,21 @@
         emit("update:input", input.value, options.value);
     })
 
+    function isForbiddenSearch(): boolean {
+        const words: string[] = input.value.split(" ");
+        words.forEach((word) => { 
+            //this is more of a joke but I think I will make it a real deal.
+            if (blackList.includes(word)) {
+                notificationService.sendNotification({severity:"WARNING", message: `This Website reported your search for ${input.value} because of ${word} to the FBI. What the fuck is wrong with you? You are searching for ${word}. Please get youself some help.`});
+                return false;
+            }
+        });
+        return true;
+    }
+
     function confirm(): void {
         emit('confirm');
+        if (isForbiddenSearch()) return;
         input.value = "";
     }
 

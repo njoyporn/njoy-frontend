@@ -8,10 +8,12 @@
     import { durationToTimeString } from "../shared/utils/duration.utils";
     import { FavouriteManager } from "@/services/favourite.service";
     import StarfieldComponent from "../shared/starfield/StarfieldComponent.vue";
+import ArtisticLoadingScreen from "../shared/loading/ArtisticLoadingScreen.vue";
 
     const route = useRoute();
     const isLoading = ref<boolean>(true);
     const video = ref<Video|null>(null);
+    const showVideoList = ref<boolean>(false);
 
     const canLike = ref<boolean>(true);
     const canDislike = ref<boolean>(true);
@@ -58,11 +60,13 @@
         isFullScreen.value = true;
     }
     function disableFullscreen(): void {
+        showVideoList.value = true;
         isFullScreen.value = false;
     }
 </script>
 
 <template>
+    <ArtisticLoadingScreen v-if="isLoading"></ArtisticLoadingScreen>
     <div v-if="video" class="w-full h-screen grid grid-rows-[1fr_8fr_2fr] pulse">
         <div class="w-full h-full">
 
@@ -88,7 +92,8 @@
 
                     <div class="flex items-center"><img class="w-12 h-12" :class="{'grayscale': !canDislike}" src="/icons/eye-colored.svg" /><span class="pl-4 font-bold lg:text-4xl text-2xl" v-text="video.views"></span></div>
 
-                    <div></div>
+                    <div v-if="video.sponsored_url" class="h-full w-full"><a :href="video.sponsored_url" target="_blank"><img class="w-12 h-12" src="/icons/donor.svg"></a></div>
+                    <div v-else></div>
 
                     <div class="w-full h-full flex items-center justify-end pr-8"><img class="w-12 h-12" src="/icons/duration.svg" /><span class="pl-4 font-bold text-4xl" v-text="durationToTimeString(video.duration)"></span></div>
                 </div>
@@ -96,7 +101,7 @@
             <div class="w-full h-full"></div>
         </div>
     </div>
-    <div class="w-full">
+    <div v-if="showVideoList" class="w-full">
         <ListComponent :title="'Random Videos'" :state="'RANDOM'" :titleClasses="'bg-pg-dark-100'" :listClasses="'bg-pg-dark-100'"></ListComponent>
     </div>
     <StarfieldComponent v-if="!isFullScreen || showStarfieldAnyway" :wrapperClasses="'opacity-25'"/>

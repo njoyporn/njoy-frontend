@@ -10,6 +10,7 @@ export abstract class AccountsAPI {
     private static readonly LOGIN_API_PATH: string = "/login";
     private static readonly REGISTER_API_PATH: string = "/register";
     private static readonly LOGOUT_API_PATH: string = "/logout";
+    private static readonly VERIFY_ACCOUNT: string = "/verify-account";
     private static readonly BASE_URL: string = window.location.host.includes("localhost") ? `http://localhost:6692${this.API_PATH}` : `${this.HOST_URL}${this.API_PATH}`;
     // private static readonly BASE_URL: string = "https://api.njoyporn.com/api/v1";
 
@@ -44,5 +45,12 @@ export abstract class AccountsAPI {
         await HttpClient.get(`${this.HOST_URL}${this.ACCOUNT_SERVICE_PATH}${this.API_PATH}${this.LOGOUT_API_PATH}`);
         localStorage.clear();
         document.location.href = "https://google.com";
+    }
+
+    public static async verifyAccount(id: string, code: string): Promise<boolean> {
+        let res: BusinessResponse<any> = await HttpClient.get<BusinessResponse<any>>(`${this.HOST_URL}${this.ACCOUNT_SERVICE_PATH}${this.API_PATH}${this.VERIFY_ACCOUNT}?id=${id}&code=${code}`);
+        if(res.message === 'account-verified'){
+            return true;
+        } return false;
     }
 }
