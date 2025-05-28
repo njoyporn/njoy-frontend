@@ -389,7 +389,7 @@
             <div class="w-full text-right pr-2 text-xl"> {{ nextTimestamp.happy_end }}</div>
             <div class="text-xl flex justify-center">{{ currentTimestampCounter }} / {{ video.timestamps.length }}</div>
         </div>
-        <ActionStampEditor v-if="showActionEditor" :video="video" @action-stamp-created="addActionStamp($event)"></ActionStampEditor>
+        <ActionStampEditor v-if="showActionEditor" :video="video" :currentTime="videoElement.currentTime" @action-stamp-created="addActionStamp($event)"></ActionStampEditor>
         <video id="video-player" class="absolute z-20 w-[100%] h-[100%] rounded-lg" ref="video-player" :src="deriveWatchURL()" :poster="deriveThumbnailURL()" muted @mouseenter="enableDetails(2750,1)" @click="playPause()"></video>
     </div>    
 </template>

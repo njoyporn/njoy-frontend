@@ -1,6 +1,9 @@
 <script setup lang="ts">
     import { ref } from "vue";
+    // import PayPalButton from "../payment/PayPalButton.vue";
     const suitUp = ref<boolean>(false)
+    
+
 </script>
 
 <template>
@@ -9,12 +12,13 @@
     <div class="w-full p-2 flex justify-center items-center">
         <img class="rounded-md" src="/shelf.png" @mouseenter="suitUp = true" @mouseleave="suitUp = false">
     </div>
+    <!-- <PayPalButton :reference_id="'some-test-of-me'" :price="9.98"></PayPalButton> -->
     <Transition name="fade">
     <h1 v-if="suitUp" class="text-6xl text-center">Suit Up!</h1>
     </Transition>
     <div class="text-3xl fixed w-full bottom-0 flex justify-center gap-2 items-center">
       <p>More about the application on Github:</p>
-      <a href="https://github.com/njoyporn">
+      <a href="https://github.com/njoyporn" target="_blank">
         <img src="/icons/ide/gitlab.svg" />
       </a>
     </div>

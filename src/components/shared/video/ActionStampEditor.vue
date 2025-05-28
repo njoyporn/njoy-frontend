@@ -13,6 +13,7 @@
 
     const props = defineProps<{
         video: Video
+        currentTime?: number
     }>()
 
     const emit = defineEmits<{
@@ -40,13 +41,21 @@
         actionStampService.deleteActionStamp(actionStamp);
         actionStamps.value = actionStampService.actionStamps;
     }
+
+    function setCurrentTime(): void {
+        if(!props.currentTime) return;
+        actionStamp.value.ts = props.currentTime;
+    }
 </script>
 
 <template>
     <div class="w-full h-full flex justify-center items-center relative z-50">
         <div class="w-[54rem] h-[40rem] gap-2 bg-slate-800 bg-opacity-75 grid grid-rows-[1fr_2fr_3fr_3fr_2fr] p-4 border rounded-lg shadow-xl" :class="{'rounded-r-none' : showAdvanced}">
             <div class="grid grid-cols-[1fr_4rem] items-center"><h1>Action-Stamp Editor</h1><img v-if="!showAdvanced" class="h-9 w-auto" src="/icons/settings.svg" @click="showAdvanced = true"></div>
-            <input v-model="actionStamp.ts" type="number" class="h-16 w-full border-2 bg-gray-700 rounded-md">
+            <div class="w-full h-hull grid grid-cols-[8fr_2fr] gap-4">
+                <input v-model="actionStamp.ts" type="number" class="h-16 w-full border-2 bg-gray-700 rounded-md">
+                <button @click="setCurrentTime()" class="w-full h-3/5 border rounded-lg hover:bg-fuchsia-300">NOW</button>
+            </div>
             <MultiSelectionComponent v-model:selection="actionStamp.category" :list="categoryList" :inputPlaceholder="'Enter Sub-Categorys'"></MultiSelectionComponent>
             <MultiSelectionComponent v-model:selection="actionStamp.sub_category" :list="sub_categoryList" :inputPlaceholder="'Enter Sub-Categorys'"></MultiSelectionComponent>
             <PrimaryButton :text="'Save'" :classes="'w-full'" @button-confirm="saveActionStamp()"></PrimaryButton>
